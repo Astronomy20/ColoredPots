@@ -24,7 +24,6 @@ public class ColoredPotsClient {
 
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
-        // Some client setup code
         ColoredPots.LOGGER.info("HELLO FROM CLIENT SETUP");
         ColoredPots.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
     }
