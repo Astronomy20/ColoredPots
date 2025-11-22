@@ -8,9 +8,14 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Set;
 
 public class BlockLootTableProvider extends BlockLootSubProvider {
@@ -20,21 +25,39 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        dropSelf(ModBlocks.EXAMPLE_POT.get());
-
         for (DyeColor color : DyeColor.values()) {
             dropSelf(ModBlocks.COLORED_DECORATED_POTS.get(color).get());
             dropSelf(ModBlocks.COLORED_FLOWER_POTS.get(color).get());
 
-            for (DeferredBlock<Block> pottedBlock : ModBlocks.COLORED_FLOWER_POTTED.get(color).values()) {
-                Block block = pottedBlock.get();
-                if (block instanceof FlowerPotBlock) {
-                    dropPottedContents((FlowerPotBlock) block);
-                } else {
-                    dropSelf(block);
-                }
+            for (Map.Entry<String, DeferredBlock<Block>> entry :
+                    ModBlocks.COLORED_FLOWER_POTTED.get(color).entrySet()) {
+
+                Block potted = entry.getValue().get();
+                Block emptyPot = ModBlocks.COLORED_FLOWER_POTS.get(color).get();
+
+                dropModPottedContents(potted, emptyPot);
             }
         }
+    }
+
+    protected void dropModPottedContents(Block potBlock, Block emptyPotBlock) {
+        if (!(potBlock instanceof FlowerPotBlock pot)) {
+            throw new IllegalArgumentException("dropModPottedContentsWithPot called on non-FlowerPotBlock: " + potBlock);
+        }
+
+        this.add(potBlock, b -> LootTable.lootTable()
+                .withPool(applyExplosionCondition(b,
+                        LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                // Drop the pot item
+                                .add(LootItem.lootTableItem(emptyPotBlock))
+                ))
+                .withPool(applyExplosionCondition(b,
+                        LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                // Drop the plant
+                                .add(LootItem.lootTableItem(pot.getPotted()))
+                )));
     }
 
     @Override
