@@ -7,6 +7,8 @@ import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FlowerPotBlock;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
@@ -18,10 +20,20 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
+        dropSelf(ModBlocks.EXAMPLE_POT.get());
+
         for (DyeColor color : DyeColor.values()) {
             dropSelf(ModBlocks.COLORED_DECORATED_POTS.get(color).get());
-
             dropSelf(ModBlocks.COLORED_FLOWER_POTS.get(color).get());
+
+            for (DeferredBlock<Block> pottedBlock : ModBlocks.COLORED_FLOWER_POTTED.get(color).values()) {
+                Block block = pottedBlock.get();
+                if (block instanceof FlowerPotBlock) {
+                    dropPottedContents((FlowerPotBlock) block);
+                } else {
+                    dropSelf(block);
+                }
+            }
         }
     }
 
