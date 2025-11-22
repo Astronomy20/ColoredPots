@@ -22,14 +22,6 @@ public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(ColoredPots.MOD_ID);
 
-    public static final DeferredBlock<Block> EXAMPLE_POT = registerBlock("example_pot",
-            () -> new FlowerPotBlock(
-                    null,
-                    () -> Blocks.AIR,
-                    BlockBehaviour.Properties.ofFullCopy(Blocks.FLOWER_POT)
-            )
-    );
-
     public static final Map<DyeColor, DeferredBlock<Block>> COLORED_DECORATED_POTS = new EnumMap<>(DyeColor.class);
     public static final Map<DyeColor, DeferredBlock<Block>> COLORED_FLOWER_POTS = new EnumMap<>(DyeColor.class);
     public static final Map<DyeColor, Map<String, DeferredBlock<Block>>> COLORED_FLOWER_POTTED = new EnumMap<>(DyeColor.class);
