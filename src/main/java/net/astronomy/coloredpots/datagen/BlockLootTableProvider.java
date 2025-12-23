@@ -19,45 +19,46 @@ import java.util.Map;
 import java.util.Set;
 
 public class BlockLootTableProvider extends BlockLootSubProvider {
-    protected BlockLootTableProvider(HolderLookup.Provider registries) {
+
+    public BlockLootTableProvider(HolderLookup.Provider registries) {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
     }
 
     @Override
     protected void generate() {
-        for (DyeColor color : DyeColor.values()) {
-            dropSelf(ModBlocks.COLORED_DECORATED_POTS.get(color).get());
-            dropSelf(ModBlocks.COLORED_FLOWER_POTS.get(color).get());
 
-            for (Map.Entry<String, DeferredBlock<Block>> entry :
+        for (DyeColor color : DyeColor.values()) {
+
+            dropSelf(ModBlocks.COLORED_FLOWER_POTS.get(color).get());
+            dropSelf(ModBlocks.COLORED_DECORATED_POTS.get(color).get());
+
+            for (Map.Entry<Block, DeferredBlock<FlowerPotBlock>> entry :
                     ModBlocks.COLORED_FLOWER_POTTED.get(color).entrySet()) {
 
                 Block potted = entry.getValue().get();
                 Block emptyPot = ModBlocks.COLORED_FLOWER_POTS.get(color).get();
 
-                dropModPottedContents(potted, emptyPot);
+                dropModPottedContents((FlowerPotBlock) potted, emptyPot);
             }
         }
     }
 
-    protected void dropModPottedContents(Block potBlock, Block emptyPotBlock) {
-        if (!(potBlock instanceof FlowerPotBlock pot)) {
-            throw new IllegalArgumentException("dropModPottedContentsWithPot called on non-FlowerPotBlock: " + potBlock);
-        }
+    /** Loot for custom colored potted plants */
+    protected void dropModPottedContents(FlowerPotBlock potBlock, Block emptyPot) {
+        Block plant = potBlock.getPotted();
 
-        this.add(potBlock, b -> LootTable.lootTable()
-                .withPool(applyExplosionCondition(b,
+        add(potBlock, loot -> LootTable.lootTable()
+                .withPool(
                         LootPool.lootPool()
-                                .setRolls(ConstantValue.exactly(1.0F))
-                                // Drop the pot item
-                                .add(LootItem.lootTableItem(emptyPotBlock))
-                ))
-                .withPool(applyExplosionCondition(b,
+                                .setRolls(ConstantValue.exactly(1))
+                                .add(LootItem.lootTableItem(emptyPot))
+                )
+                .withPool(
                         LootPool.lootPool()
-                                .setRolls(ConstantValue.exactly(1.0F))
-                                // Drop the plant
-                                .add(LootItem.lootTableItem(pot.getPotted()))
-                )));
+                                .setRolls(ConstantValue.exactly(1))
+                                .add(LootItem.lootTableItem(plant))
+                )
+        );
     }
 
     @Override
