@@ -123,7 +123,7 @@ public class ModBlocks {
                 DeferredBlock<FlowerPotBlock> potted = registerBlock(
                         color.getName() + "_potted_" + id,
                         () -> new FlowerPotBlock(
-                                () -> (FlowerPotBlock) emptyPot.get(),
+                                emptyPot,
                                 () -> plant,
                                 BlockBehaviour.Properties.of()
                                         .instabreak()
