@@ -93,7 +93,7 @@ public class ModBlocks {
 
         for (DyeColor color : DyeColor.values()) {
 
-            // Decorated pot
+            // Decorated Pots
             DeferredBlock<DecoratedPotBlock> decoratedPot = registerBlock(
                     color.getName() + "_decorated_pot",
                     () -> new DecoratedPotBlock(
@@ -103,24 +103,40 @@ public class ModBlocks {
             );
             COLORED_DECORATED_POTS.put(color, decoratedPot);
 
-            // Empty colored flower pot
-            DeferredBlock<FlowerPotBlock> emptyPot = registerBlock(
+            // Create a map to store potted variants for this color
+            Map<Block, DeferredBlock<FlowerPotBlock>> pottedMap = COLORED_FLOWER_POTTED.get(color);
+
+            // Flower Pots
+            DeferredBlock<FlowerPotBlock> emptyPot = BLOCKS.register(
                     color.getName() + "_flower_pot",
-                    () -> new FlowerPotBlock(
-                            null,
-                            () -> Blocks.AIR,
-                            BlockBehaviour.Properties.of()
-                                    .instabreak()
-                                    .noOcclusion()
-                                    .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)
-                    )
+                    () -> {
+                        FlowerPotBlock pot = new FlowerPotBlock(
+                                null,
+                                () -> Blocks.AIR,
+                                BlockBehaviour.Properties.of()
+                                        .instabreak()
+                                        .noOcclusion()
+                                        .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)
+                        );
+
+                        // Plant mappings
+                        for (Block plant : plants) {
+                            DeferredBlock<FlowerPotBlock> pottedBlock = pottedMap.get(plant);
+                            if (pottedBlock != null) {
+                                pot.addPlant(BuiltInRegistries.BLOCK.getKey(plant), pottedBlock);
+                            }
+                        }
+
+                        return pot;
+                    }
             );
             COLORED_FLOWER_POTS.put(color, emptyPot);
+            registerBlockItem(color.getName() + "_flower_pot", emptyPot);
 
-            // Potted variants - use Supplier to get the empty pot
+            // Flower Pot Potted Variants
             for (Block plant : plants) {
                 String id = BuiltInRegistries.BLOCK.getKey(plant).getPath();
-                DeferredBlock<FlowerPotBlock> potted = registerBlock(
+                DeferredBlock<FlowerPotBlock> potted = BLOCKS.register(
                         color.getName() + "_potted_" + id,
                         () -> new FlowerPotBlock(
                                 emptyPot,
@@ -131,7 +147,7 @@ public class ModBlocks {
                                         .pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)
                         )
                 );
-                COLORED_FLOWER_POTTED.get(color).put(plant, potted);
+                pottedMap.put(plant, potted);
             }
         }
     }
