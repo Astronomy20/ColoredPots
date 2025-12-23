@@ -7,6 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DecoratedPotBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
@@ -26,6 +27,11 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
 
         for (DyeColor color : DyeColor.values()) {
+
+            DeferredBlock<DecoratedPotBlock> decoratedPotDef = ModBlocks.COLORED_DECORATED_POTS.get(color);
+            String decoratedPotName = color.getName() + "_decorated_pot";
+
+            simpleBlock(decoratedPotDef.get(), generatedModel("block/" + decoratedPotName));
 
             DeferredBlock<? extends Block> emptyPotDef = ModBlocks.COLORED_FLOWER_POTS.get(color);
             Block emptyPot = emptyPotDef.get();

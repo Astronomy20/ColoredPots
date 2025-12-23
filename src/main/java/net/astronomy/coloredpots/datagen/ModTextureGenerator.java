@@ -21,6 +21,17 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModTextureGenerator implements DataProvider {
 
+    private static final String[] SHERD_PATTERNS = {
+            "angler_pottery_pattern", "archer_pottery_pattern", "arms_up_pottery_pattern",
+            "blade_pottery_pattern", "brewer_pottery_pattern", "burn_pottery_pattern",
+            "danger_pottery_pattern", "explorer_pottery_pattern", "friend_pottery_pattern",
+            "heart_pottery_pattern", "heartbreak_pottery_pattern", "howl_pottery_pattern",
+            "miner_pottery_pattern", "mourner_pottery_pattern", "plenty_pottery_pattern",
+            "prize_pottery_pattern", "sheaf_pottery_pattern", "shelter_pottery_pattern",
+            "skull_pottery_pattern", "snort_pottery_pattern", "flow_pottery_pattern",
+            "guster_pottery_pattern", "scrape_pottery_pattern"
+    };
+
     private static final Map<DyeColor, int[]> TERRACOTTA_COLORS = new HashMap<>();
 
     static {
@@ -44,11 +55,13 @@ public class ModTextureGenerator implements DataProvider {
 
     private final PackOutput.PathProvider blockPathProvider;
     private final PackOutput.PathProvider itemPathProvider;
+    private final PackOutput.PathProvider entityPathProvider;
     private final ExistingFileHelper existingFileHelper;
 
     public ModTextureGenerator(PackOutput output, ExistingFileHelper existingFileHelper) {
         this.blockPathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "textures/block");
         this.itemPathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "textures/item");
+        this.entityPathProvider = output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "textures/entity");
         this.existingFileHelper = existingFileHelper;
     }
 
@@ -56,15 +69,33 @@ public class ModTextureGenerator implements DataProvider {
     public CompletableFuture<?> run(CachedOutput cache) {
         return CompletableFuture.runAsync(() -> {
             try {
-                BufferedImage vanillaBlockPot = loadVanillaTexture("block/flower_pot");
-                BufferedImage vanillaItemPot = loadVanillaTexture("item/flower_pot");
+                BufferedImage vanillaBlockFlowerPot = loadVanillaTexture("block/flower_pot");
+                BufferedImage vanillaItemFlowerPot = loadVanillaTexture("item/flower_pot");
+
+                BufferedImage vanillaDecoratedPotBase = loadVanillaTexture("entity/decorated_pot/decorated_pot_base");
+                BufferedImage vanillaDecoratedPotSide = loadVanillaTexture("entity/decorated_pot/decorated_pot_side");
 
                 for (DyeColor color : DyeColor.values()) {
-                    BufferedImage coloredBlockPot = applyColorTint(vanillaBlockPot, color);
-                    BufferedImage coloredItemPot = applyColorTint(vanillaItemPot, color);
+                    BufferedImage coloredBlockFlowerPot = applyColorTint(vanillaBlockFlowerPot, color);
+                    BufferedImage coloredItemFlowerPot = applyColorTint(vanillaItemFlowerPot, color);
 
-                    saveBlockTexture(cache, color, coloredBlockPot);
-                    saveItemTexture(cache, color, coloredItemPot);
+                    BufferedImage coloredBlockDecoratedPotBase = applyColorTint(vanillaDecoratedPotBase, color);
+                    BufferedImage coloredBlockDecoratedPotSide = applyColorTint(vanillaDecoratedPotSide, color);
+
+                    saveFlowerPotBlockTexture(cache, color, coloredBlockFlowerPot);
+                    saveFlowerPotItemTexture(cache, color, coloredItemFlowerPot);
+
+                    saveDecoratedPotTexture(cache, color, coloredBlockDecoratedPotBase, "decorated_pot_base");
+                    saveDecoratedPotTexture(cache, color, coloredBlockDecoratedPotSide, "decorated_pot_side");
+
+                    for (String sherdName : SHERD_PATTERNS) {
+                        try {
+                            BufferedImage vanillaSherd = loadVanillaTexture("entity/decorated_pot/" + sherdName);
+                            saveDecoratedPotTexture(cache, color, applyColorTint(vanillaSherd, color), sherdName);
+                        } catch (IOException e) {
+                            System.err.println("Skipping missing sherd texture: " + sherdName);
+                        }
+                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Failed to generate textures", e);
@@ -127,23 +158,32 @@ public class ModTextureGenerator implements DataProvider {
         return result;
     }
 
-    private void saveBlockTexture(CachedOutput cache, DyeColor color, BufferedImage image) throws IOException {
+    private void saveDecoratedPotTexture(CachedOutput cache, DyeColor color, BufferedImage image, String textureName) throws IOException {
+        String folderName = "colored_decorated_pot/" + color.getName();
+        String filename = color + "_" + textureName + ".png";
+
+        Path outputPath = entityPathProvider.json(ResourceLocation.fromNamespaceAndPath(
+                ColoredPots.MOD_ID, folderName + "/" + textureName));
+
+        outputPath = outputPath.getParent().resolve(filename);
+        saveImage(cache, outputPath, image);
+    }
+
+    private void saveFlowerPotBlockTexture(CachedOutput cache, DyeColor color, BufferedImage image) throws IOException {
         String filename = color.getName() + "_flower_pot.png";
         Path outputPath = blockPathProvider.json(ResourceLocation.fromNamespaceAndPath(
                 ColoredPots.MOD_ID, filename.replace(".png", "")));
 
-        // Change extension from .json to .png
         outputPath = outputPath.getParent().resolve(filename);
 
         saveImage(cache, outputPath, image);
     }
 
-    private void saveItemTexture(CachedOutput cache, DyeColor color, BufferedImage image) throws IOException {
+    private void saveFlowerPotItemTexture(CachedOutput cache, DyeColor color, BufferedImage image) throws IOException {
         String filename = color.getName() + "_flower_pot.png";
         Path outputPath = itemPathProvider.json(ResourceLocation.fromNamespaceAndPath(
                 ColoredPots.MOD_ID, filename.replace(".png", "")));
 
-        // Change extension from .json to .png
         outputPath = outputPath.getParent().resolve(filename);
 
         saveImage(cache, outputPath, image);

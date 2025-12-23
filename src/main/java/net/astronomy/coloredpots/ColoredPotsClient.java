@@ -1,7 +1,9 @@
 package net.astronomy.coloredpots;
 
 import net.astronomy.coloredpots.block.ModBlocks;
+import net.astronomy.coloredpots.block.entity.ModBlockEntities;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.blockentity.DecoratedPotRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
@@ -10,10 +12,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -35,9 +37,14 @@ public class ColoredPotsClient {
         // Register event listeners on the mod event bus
         modBus.addListener(this::onClientSetup);
         modBus.addListener(this::registerBlockColors);
+        modBus.addListener(this::registerRenderers);
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
+    }
+
+    public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerBlockEntityRenderer(ModBlockEntities.COLORED_DECORATED_POT.get(), DecoratedPotRenderer::new);
     }
 
     private void registerBlockColors(RegisterColorHandlersEvent.Block event) {

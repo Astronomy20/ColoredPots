@@ -104,7 +104,7 @@ public class ModBlocks {
                     () -> new DecoratedPotBlock(
                             BlockBehaviour.Properties.of()
                                     .mapColor(color)
-                                    .strength(2.0F, 3.0F)
+                                    .strength(0.0F, 0.0F)
                                     .noOcclusion()
                                     .pushReaction(PushReaction.DESTROY)
                     ) {

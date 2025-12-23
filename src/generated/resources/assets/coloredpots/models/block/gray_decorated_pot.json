@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/decorated_pot",
+  "textures": {
+    "base": "coloredpots:entity/colored_decorated_pot/gray/gray_decorated_pot_base",
+    "particle": "minecraft:block/gray_terracotta",
+    "side": "coloredpots:entity/colored_decorated_pot/gray/gray_decorated_pot_side"
+  }
+}

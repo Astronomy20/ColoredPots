@@ -35,10 +35,10 @@ public class BlockLootTableProvider extends BlockLootSubProvider {
             for (Map.Entry<Block, DeferredBlock<FlowerPotBlock>> entry :
                     ModBlocks.COLORED_FLOWER_POTTED.get(color).entrySet()) {
 
-                Block potted = entry.getValue().get();
+                FlowerPotBlock potted = entry.getValue().get();
                 Block emptyPot = ModBlocks.COLORED_FLOWER_POTS.get(color).get();
 
-                dropModPottedContents((FlowerPotBlock) potted, emptyPot);
+                dropModPottedContents(potted, emptyPot);
             }
         }
     }

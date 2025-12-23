@@ -56,6 +56,9 @@ public class ModBlockModelProvider extends BlockModelProvider {
                     }
                 }
             }
+
+            String decoratedPotName = color.getName() + "_decorated_pot";
+            decoratedPotModel(decoratedPotName, color);
         }
     }
 
@@ -110,5 +113,16 @@ public class ModBlockModelProvider extends BlockModelProvider {
                 .texture("plant", mcLoc("block/" + prefix + "_plant"))
                 .texture("side", mcLoc("block/" + prefix + "_side"))
                 .texture("top", mcLoc("block/" + prefix + "_top"));
+    }
+
+    private void decoratedPotModel(String name, DyeColor color) {
+        ResourceLocation coloredTerracotta = mcLoc("block/" + color.getName() + "_terracotta");
+        ResourceLocation coloredBase = modLoc("entity/colored_decorated_pot/" + color + "/" + color.getName() + "_decorated_pot_base");
+        ResourceLocation coloredSide = modLoc("entity/colored_decorated_pot/" + color + "/" + color.getName() + "_decorated_pot_side");
+
+        withExistingParent(name, mcLoc("block/decorated_pot"))
+                .texture("particle", coloredTerracotta)
+                .texture("base", coloredBase)
+                .texture("side", coloredSide);
     }
 }
