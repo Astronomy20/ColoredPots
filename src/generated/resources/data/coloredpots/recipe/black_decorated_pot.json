@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "minecraft:brick"
+    },
+    "D": {
+      "item": "minecraft:black_dye"
+    }
+  },
+  "pattern": [
+    " B ",
+    "BDB",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "coloredpots:black_decorated_pot"
+  }
+}

@@ -38,6 +38,11 @@ public class DataGenerators {
                 )
         );
 
+        generator.addProvider(
+                event.includeServer(),
+                new RecipesProvider(packOutput, lookup)
+        );
+
         if (false) {
             generator.addProvider(
                     event.includeClient(),
