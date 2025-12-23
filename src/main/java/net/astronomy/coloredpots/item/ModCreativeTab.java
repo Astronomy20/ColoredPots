@@ -21,7 +21,7 @@ public class ModCreativeTab {
             CREATIVE_MODE_TAB.register("flower_pots_tab", () ->
                 CreativeModeTab.builder()
                         .icon(() -> new ItemStack(
-                                ModBlocks.COLORED_FLOWER_POTS.get(DyeColor.ORANGE).get()
+                                ModBlocks.COLORED_FLOWER_POTS.get(DyeColor.LIME).get()
                         ))
                         .title(Component.translatable("creativetab.coloredpots.flower_pots"))
                         .displayItems((params, output) -> {

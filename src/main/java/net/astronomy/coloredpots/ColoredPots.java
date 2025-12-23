@@ -1,6 +1,7 @@
 package net.astronomy.coloredpots;
 
 import net.astronomy.coloredpots.block.ModBlocks;
+import net.astronomy.coloredpots.block.entity.ModBlockEntities;
 import net.astronomy.coloredpots.item.ModCreativeTab;
 import net.astronomy.coloredpots.item.ModItems;
 import org.slf4j.Logger;
@@ -40,8 +41,9 @@ public class ColoredPots {
 
         ModCreativeTab.register(modEventBus);
 
-        ModBlocks.register(modEventBus);
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

@@ -1,7 +1,9 @@
 package net.astronomy.coloredpots.block;
 
 import net.astronomy.coloredpots.ColoredPots;
+import net.astronomy.coloredpots.block.entity.ColoredDecoratedPotBlockEntity;
 import net.astronomy.coloredpots.item.ModItems;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -10,7 +12,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DecoratedPotBlock;
 import net.minecraft.world.level.block.FlowerPotBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -94,14 +99,23 @@ public class ModBlocks {
         for (DyeColor color : DyeColor.values()) {
 
             // Decorated Pots
-            DeferredBlock<DecoratedPotBlock> decoratedPot = registerBlock(
+            DeferredBlock<DecoratedPotBlock> decoratedPot = BLOCKS.register(
                     color.getName() + "_decorated_pot",
                     () -> new DecoratedPotBlock(
                             BlockBehaviour.Properties.of()
-                                    .strength(0.5f)
-                    )
+                                    .mapColor(color)
+                                    .strength(2.0F, 3.0F)
+                                    .noOcclusion()
+                                    .pushReaction(PushReaction.DESTROY)
+                    ) {
+                        @Override
+                        public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+                            return new ColoredDecoratedPotBlockEntity(pos, state);
+                        }
+                    }
             );
             COLORED_DECORATED_POTS.put(color, decoratedPot);
+            registerBlockItem(color.getName() + "_decorated_pot", decoratedPot);
 
             // Create a map to store potted variants for this color
             Map<Block, DeferredBlock<FlowerPotBlock>> pottedMap = COLORED_FLOWER_POTTED.get(color);
