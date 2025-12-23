@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "coloredpots:orange_flower_pot"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:torchflower"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "coloredpots:blocks/orange_potted_torchflower"
+}

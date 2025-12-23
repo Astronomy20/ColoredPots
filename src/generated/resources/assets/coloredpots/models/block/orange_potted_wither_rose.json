@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/flower_pot_cross",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "flowerpot": "coloredpots:block/orange_flower_pot",
+    "particle": "coloredpots:block/orange_flower_pot",
+    "plant": "minecraft:block/wither_rose"
+  }
+}

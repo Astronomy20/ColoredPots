@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/flower_pot",
+  "textures": {
+    "flowerpot": "coloredpots:block/lime_flower_pot",
+    "particle": "coloredpots:block/lime_flower_pot"
+  }
+}
