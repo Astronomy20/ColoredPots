@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/flower_pot_cross",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "flowerpot": "coloredpots:block/cyan_flower_pot",
+    "particle": "coloredpots:block/cyan_flower_pot",
+    "plant": "minecraft:block/warped_fungus"
+  }
+}

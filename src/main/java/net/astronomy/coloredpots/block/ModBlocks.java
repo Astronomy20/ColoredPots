@@ -69,7 +69,6 @@ public class ModBlocks {
                 Blocks.LILY_OF_THE_VALLEY,
                 Blocks.WITHER_ROSE,
                 Blocks.TORCHFLOWER,
-                Blocks.PINK_PETALS,
 
                 // Mushrooms
                 Blocks.RED_MUSHROOM,

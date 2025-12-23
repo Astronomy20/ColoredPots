@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/potted_bamboo",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "bamboo": "minecraft:block/bamboo_stalk",
+    "dirt": "minecraft:block/dirt",
+    "flowerpot": "coloredpots:block/orange_flower_pot",
+    "leaf": "minecraft:block/bamboo_singleleaf",
+    "particle": "coloredpots:block/orange_flower_pot"
+  }
+}

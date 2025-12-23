@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/potted_azalea_bush",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "flowerpot": "coloredpots:block/cyan_flower_pot",
+    "particle": "coloredpots:block/cyan_flower_pot",
+    "plant": "minecraft:block/potted_azalea_bush_plant",
+    "side": "minecraft:block/potted_azalea_bush_side",
+    "top": "minecraft:block/potted_azalea_bush_top"
+  }
+}
